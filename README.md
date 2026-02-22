@@ -128,6 +128,8 @@ model.save_pretrained_gguf("./model_gguf", tokenizer, quantization_method = "q4_
 Below is the training log from a successful run on an Intel Arc A770.
 <img width="1478" height="485" alt="image" src="https://github.com/user-attachments/assets/0db8ea95-4a9d-4139-869e-bd7b26ab2a57" />
 <img width="131" height="634" alt="image" src="https://github.com/user-attachments/assets/f6907fbd-405c-4c15-a607-7c1e7fbc80f2" /> <img width="136" height="600" alt="image" src="https://github.com/user-attachments/assets/8942a45e-fe27-4ee8-a919-5c1c95e74ebb" /> <img width="132" height="605" alt="image" src="https://github.com/user-attachments/assets/bc06935d-2ec7-4938-9219-91867a98ec9c" />
+
+Successfully achieved a Loss drop from 2.82 to 1.35 in 60 steps.
 ---
 ## 🛠 Troubleshooting for Beginners
 "Out of Memory": Lower max_seq_length to 512 and ensure per_device_train_batch_size = 1.
