@@ -48,8 +48,39 @@ python -m ipykernel install --user --name unsloth-xpu --display-name "AI-Finetun
 ```
 ---
 
-## 🔍 Phase 3: Hardware Verification
-Before training, run this script in your Jupyter Notebook to ensure your GPU and compilers are talking to each other.
+## 🔍 Phase 3: Launching Jupyter Lab & Hardware Verification
+To ensure Jupyter Lab can see your GPU, you must launch it from the Anaconda PowerShell Prompt while the environment is active.
+
+1. The Launch Command
+Open your Anaconda PowerShell Prompt and run these commands:
+
+```powershell
+# Enter your environment
+conda activate unsloth-xpu
+
+# Launch the Lab
+jupyter lab
+```
+⚠️ Pro-Tip: Fixing the "Blank Page" or HTML Issue
+If your browser doesn't open automatically or you get an error about an HTML file:
+
+Look at your PowerShell terminal.
+
+Find the lines starting with http://127.0.0.1:8888/lab?token=....
+
+Copy the entire URL (including the long token string at the end) and paste it into your browser's address bar. This bypasses any Windows file-permission issues.
+
+2. Selecting the Correct Kernel
+Once Jupyter Lab opens in your browser:
+
+Click the "Launcher" tab (the + icon).
+
+Under the "Notebook" section, select the icon labeled "AI-Finetune (Arc A770)".
+
+Note: If you don't see this name, revisit the "Register the environment" step in Phase 2.
+
+3. Hardware Verification Script
+In your new notebook, run this script to ensure your GPU and compilers are talking to each other.
 
 ```python
 import torch
@@ -100,6 +131,39 @@ model, tokenizer = FastLanguageModel.from_pretrained(
     device_map = {"": "xpu:0"}, 
 )
 ```
+2. Loading Your Dataset
+Unsloth works best with the Hugging Face datasets format. You can load a public dataset or your own local .jsonl file.
+
+```python
+from datasets import load_dataset
+
+# Load a sample dataset (Instruction tuning)
+dataset = load_dataset("yahma/alpaca-cleaned", split = "train")
+
+# Define the prompt format for your model
+prompt_style = """Below is an instruction that describes a task. Write a response that appropriately completes the request.
+
+### Instruction:
+{}
+
+### Response:
+{}"""
+
+# Format the dataset for training
+def formatting_prompts_func(examples):
+    instructions = examples["instruction"]
+    inputs       = examples["input"]
+    outputs      = examples["output"]
+    texts = []
+    for instruction, input, output in zip(instructions, inputs, outputs):
+        # Must add the end-of-string (EOS) token
+        text = prompt_style.format(instruction, output) + tokenizer.eos_token
+        texts.append(text)
+    return { "text" : texts, }
+
+dataset = dataset.map(formatting_prompts_func, batched = True)
+
+```
 ---
 ## 💾 Phase 5: CUDA-Free Adapter Merging
 On Windows, exporting to GGUF often crashes while searching for NVIDIA "CUDA." This "Mock" patch allows you to merge weights using System RAM and Storage.
@@ -136,7 +200,7 @@ Successfully achieved a Loss drop from 2.82 to 1.35 in 60 steps.
 
 "Visual Studio not found": Ensure you installed VS 2026 and the workload "Desktop development with C++".
 
-AI Debugger Prompt: If you get stuck, tell an AI: "I'm on Intel Arc, Windows, using VS 2026. Here is my error log [Paste Log]. Check my CC path and VRAM spikes."
+AI Debugger Prompt: If you get stuck, tell an AI: "I'm on Intel Arc A770, Windows, using VS 2026. Here is my error log [Paste Log]. Check my CC path and VRAM spikes or you can just send this repository to models like gemini and it can generate the scrpts based on this documentaion according to your scenario"
 ---
 ## 📄 License
 This project is licensed under the MIT License.
