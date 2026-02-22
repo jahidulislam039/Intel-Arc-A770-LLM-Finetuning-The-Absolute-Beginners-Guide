@@ -6,7 +6,7 @@ The definitive guide for stable, 2x faster LLM finetuning on Intel Arc A770 (16G
 [![Hardware](https://img.shields.io/badge/GPU-Intel%20Arc%20A770-intel)](https://www.intel.com/content/www/us/en/products/details/discrete-gpus/arc.html)
 [![Guide](https://img.shields.io/badge/Difficulty-Beginner-green)](#)
 
-This repository provides a stable, "battle-tested" roadmap to finetune Large Language Models (LLMs) like **DeepSeek-R1** locally on an **Intel Arc A770 (16GB)**. This guide is specifically designed for absolute beginners who want to move away from Google Colab and utilize their own local hardware.
+This repository provides a stable, "battle-tested" roadmap to finetune Large Language Models (LLMs) like **DeepSeek-R1-7B** locally on an **Intel Arc A770 (16GB)**. This guide is specifically designed for absolute beginners who want to move away from Google Colab and utilize their own local hardware.
 
 ---
 
